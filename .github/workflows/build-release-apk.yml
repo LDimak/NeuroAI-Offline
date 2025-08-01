@@ -1,4 +1,4 @@
-name: Build Release APK
+name: Build Debug and Release APK
 
 on:
   workflow_dispatch:
@@ -23,11 +23,27 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Build APK
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Build Release APK
         run: ./gradlew assembleRelease
 
-      - name: Upload release APK
-        uses: actions/upload-artifact@v4
+      - name: List APK files
+        run: |
+          echo "== Debug APKs =="
+          ls -alh app/build/outputs/apk/debug
+          echo "== Release APKs =="
+          ls -alh app/build/outputs/apk/release
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: neuroai-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v3
         with:
           name: neuroai-release-apk
           path: app/build/outputs/apk/release/app-release.apk
