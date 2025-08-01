@@ -1,5 +1,4 @@
 name: Decode gradle-wrapper.jar
-
 on:
   workflow_dispatch:
 
@@ -8,14 +7,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Decode base64 to gradle-wrapper.jar using Python
+      - name: Convert single-line base64 to wrapped format
         run: |
-          python3 -c "
-import base64
-with open('app/gradle/wrapper/gradle-wrapper.jar.base64', 'rb') as f:
-    data = base64.b64decode(f.read())
-with open('app/gradle/wrapper/gradle-wrapper.jar', 'wb') as out:
-    out.write(data)
-"
+          fold -w 76 app/gradle/wrapper/gradle-wrapper.jar.base64 > gradle-wrapper.jar.b64
+
+      - name: Decode base64 to gradle-wrapper.jar
+        run: |
+          base64 -d gradle-wrapper.jar.b64 > app/gradle/wrapper/gradle-wrapper.jar
+
+      - name: Commit decoded JAR
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-action
