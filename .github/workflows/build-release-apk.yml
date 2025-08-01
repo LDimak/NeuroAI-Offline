@@ -21,32 +21,34 @@ jobs:
           java-version: 17
 
       - name: Make gradlew executable
-        run: chmod +x ./gradlew
+        run: chmod +x ./app/gradlew
 
       - name: Build Debug APK
+        working-directory: ./app
         run: ./gradlew assembleDebug
 
       - name: Build Release APK
+        working-directory: ./app
         run: ./gradlew assembleRelease
 
       - name: Debug all .apk paths
-        run: find . -name "*.apk"
+        run: find app/ -name "*.apk"
 
       - name: List APK files
         run: |
           echo "== Debug APKs =="
-          ls -alh app/build/outputs/apk/debug
+          ls -alh app/app/build/outputs/apk/debug || echo "No debug APK found"
           echo "== Release APKs =="
-          ls -alh app/build/outputs/apk/release
+          ls -alh app/app/build/outputs/apk/release || echo "No release APK found"
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: neuroai-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
           name: neuroai-release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          path: app/app/build/outputs/apk/release/app-release.apk
