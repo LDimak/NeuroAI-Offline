@@ -3,6 +3,9 @@ name: Decode gradle-wrapper.jar
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   decode:
     runs-on: ubuntu-latest
@@ -23,5 +26,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add app/gradle/wrapper/gradle-wrapper.jar
-          git commit -m "Add decoded gradle-wrapper.jar"
-          git push
+          git commit -m "Add decoded gradle-wrapper.jar" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
