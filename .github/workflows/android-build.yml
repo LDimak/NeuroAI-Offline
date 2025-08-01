@@ -16,19 +16,20 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: 17
 
       - name: Установить Android SDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x app/gradlew
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
+      - name: Сборка APK
+        working-directory: app
+        run: ./gradlew assembleDebug
 
-      - name: Upload APK artifact
+      - name: Загрузить APK
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          name: NeuroAI-Offline-APK
+          path: app/build/outputs/apk/debug/*.apk
