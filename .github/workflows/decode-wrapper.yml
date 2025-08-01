@@ -1,4 +1,5 @@
 name: Decode gradle-wrapper.jar
+
 on:
   workflow_dispatch:
 
@@ -20,4 +21,7 @@ jobs:
       - name: Commit decoded JAR
         run: |
           git config user.name "github-actions"
-          git config user.email "github-action"
+          git config user.email "github-actions@github.com"
+          git add app/gradle/wrapper/gradle-wrapper.jar
+          git commit -m "Add decoded gradle-wrapper.jar"
+          git push
