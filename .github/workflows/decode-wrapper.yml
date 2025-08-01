@@ -10,6 +10,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Decode base64 to gradle-wrapper.jar
+      - name: Decode base64 to gradle-wrapper.jar using Python
         run: |
-          base64 -d app/gradle/wrapper/gradle-wrapper.jar.base64 > app/gradle/wrapper/gradle-wrapper.jar
+          python3 -c "
+import base64
+with open('app/gradle/wrapper/gradle-wrapper.jar.base64', 'rb') as f:
+    data = base64.b64decode(f.read())
+with open('app/gradle/wrapper/gradle-wrapper.jar', 'wb') as out:
+    out.write(data)
+"
